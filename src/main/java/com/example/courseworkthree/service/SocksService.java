@@ -5,7 +5,9 @@ import com.example.courseworkthree.model.Socks;
 import java.util.Map;
 
 public interface SocksService {
-    Integer addSocksToList(Socks socks,int quantity);
+
+
+    Socks addSocksToMap(Socks socks);
 
     Map<Socks,Integer> showSocksList();
 }

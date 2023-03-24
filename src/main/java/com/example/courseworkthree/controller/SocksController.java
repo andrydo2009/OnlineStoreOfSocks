@@ -21,8 +21,8 @@ public class SocksController {
 
 
     @PostMapping( "/add")
-    public ResponseEntity<Object> addSocks(@RequestBody Socks socks , @RequestBody int quantity) {
-        Integer addNewSocks = socksService.addSocksToList ( socks, quantity );
+    public ResponseEntity<Object> addSocks(@RequestBody Socks socks ) {
+        Socks addNewSocks = socksService.addSocksToMap ( socks);
         return ResponseEntity.ok ( addNewSocks );
     }
 
