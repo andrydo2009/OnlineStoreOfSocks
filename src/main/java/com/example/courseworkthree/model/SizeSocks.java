@@ -1,10 +1,10 @@
 package com.example.courseworkthree.model;
 
 public enum SizeSocks {
-    S0("25-27"),S1("27-30"),S2("28-30"),S3("31-33"),S4("31-34"),S5("35-38"),S6("39-42"),S7("43-46"),S8("47-50"),S9("50-52");
-    final String size;
+    S25(25),S27(27),S30(30),S32(32),S34(34),S36(36),S40(40),S42(42),S44(44),S50(50),S52(52);
+    final Integer size;
 
-    SizeSocks(String size) {
+    SizeSocks(Integer size) {
         this.size = size;
     }
 

@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.Map;
 
 @RestController
@@ -20,17 +21,23 @@ public class SocksController {
 
 
 
-    @PostMapping( "/add")
-    public ResponseEntity<Object> addSocks(@RequestBody Socks socks ) {
-        Socks addNewSocks = socksService.addSocksToMap ( socks);
+    @PostMapping( "/add") //добавить носки на склад
+    public ResponseEntity<Socks> addSocksToList(@RequestBody Socks socks) {
+        Socks addNewSocks = socksService.addSocksToList ( socks);
         return ResponseEntity.ok ( addNewSocks );
     }
 
     @GetMapping("/show")
-    public ResponseEntity<Map<Socks, Integer>> showSocksList() {
-        Map<Socks, Integer> socksMap = socksService.showSocksList ();
-        return ResponseEntity.ok ( socksMap);
+    public ResponseEntity<LinkedList<Socks>> showSocksList() {
+        LinkedList<Socks> socksList = socksService.showSocksList ();
+        return ResponseEntity.ok ( socksList);
     }
 
+    @PutMapping("/put")///отпускаем носки со склада
+    public ResponseEntity<Socks> editSocksToList(@RequestBody Socks socks)
+    {
+        Socks editSocks = socksService.editSocksList ( socks );
+        return ResponseEntity.ok ( editSocks );
+    }
 
 }
