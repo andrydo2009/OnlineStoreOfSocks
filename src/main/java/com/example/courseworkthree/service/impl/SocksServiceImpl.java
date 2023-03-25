@@ -34,33 +34,31 @@ public class SocksServiceImpl implements SocksService {
     }
 
     @Override
-    public Socks editSocksList(Socks socks) {
-        return null;
+    public boolean editSocksList(Socks socks) { // удаляем необходимое количество носков со склада
+        for (Socks s : socksLinkedList) {
+            if (searchIdenticalSocksList (socks,s  )&&s.getQuantity ()>=socks.getQuantity ()) {
+                s.setQuantity ( s.getQuantity () - socks.getQuantity () );
+                return true;
+            }
+        }
+        return  false;
     }
 
     @Override
     public Socks addSocksToList(Socks socks) {// пополняем наш склад носков
         for (Socks s : socksLinkedList) {
-            if (s.getColorSocks ().equals ( socks.getColorSocks () ) &&
-                    s.getSocksOfComposition () == socks.getSocksOfComposition () &&
-                    s.getSizeSocks () == socks.getSizeSocks ()) {
+            if (searchIdenticalSocksList (socks,s  )) {
                 s.setQuantity ( s.getQuantity () + socks.getQuantity () );
                 return socks;
             }
         }
-        return addSocksToList ( socks );
+        return addSocks ( socks );
     }
 
     @Override
-    public boolean searchIdenticalSocksList(Socks socksComparable) {// ищем одинаковые носки в списке без учета их количества
-        for (Socks s : socksLinkedList
-        ) {
-            if (s.getColorSocks ().equals ( socksComparable.getColorSocks () ) &&
-                    s.getSocksOfComposition () == socksComparable.getSocksOfComposition () &&
-                    s.getSizeSocks () == socksComparable.getSizeSocks ()) {
-                return true;
-            }
-        }
-        return false;
+    public boolean searchIdenticalSocksList(Socks socksComparable , Socks socksList) {// ищем одинаковые носки в списке без учета их количества
+        return socksList.getColorSocks ().equals ( socksComparable.getColorSocks () ) &&
+                socksList.getSocksOfComposition () == socksComparable.getSocksOfComposition () &&
+                socksList.getSizeSocks () == socksComparable.getSizeSocks ();
     }
 }

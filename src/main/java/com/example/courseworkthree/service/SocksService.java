@@ -7,6 +7,7 @@ import java.util.LinkedList;
 public interface SocksService {
 
 
+    boolean editSocksList(Socks socks);
 
     Socks addSocksToList(Socks socks);
 
@@ -14,7 +15,6 @@ public interface SocksService {
 
     LinkedList<Socks> showSocksList();
 
-    Socks editSocksList(Socks socks);
 
-    boolean searchIdenticalSocksList(Socks socksComparable);
+    boolean searchIdenticalSocksList(Socks socksComparable , Socks socksList);
 }
