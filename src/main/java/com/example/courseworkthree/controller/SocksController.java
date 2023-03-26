@@ -1,8 +1,11 @@
 package com.example.courseworkthree.controller;
 
+import com.example.courseworkthree.model.ColorSocks;
+import com.example.courseworkthree.model.SizeSocks;
 import com.example.courseworkthree.model.Socks;
 import com.example.courseworkthree.service.SocksService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,5 +41,13 @@ public class SocksController {
             return ResponseEntity.ok (  ).build ();
         }
         return ResponseEntity.notFound ().build ();
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<Integer> getAvailabilitySokcsToParameter( int cottonMin, int cottonMax, ColorSocks colorSocks, SizeSocks sizeSocks){
+       int availability = socksService.getSocksAvailability ( cottonMin ,cottonMax,colorSocks,sizeSocks );
+       if (availability>0)
+       { return ResponseEntity.ok (availability);}
+       else  return ResponseEntity.status ( HttpStatus.NOT_FOUND ).build ();
     }
 }
