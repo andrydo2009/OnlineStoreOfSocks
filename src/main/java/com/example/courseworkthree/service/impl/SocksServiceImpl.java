@@ -14,7 +14,7 @@ import java.util.LinkedList;
 @Service
 public class SocksServiceImpl implements SocksService {
 
-    private static LinkedList<Socks> socksLinkedList = new LinkedList<> ();
+    private static  LinkedList<Socks> socksLinkedList = new LinkedList<> ();
 
 
     @PostConstruct // когда метод отмечен этой аннотацией, он будет вызываться сразу после внедрения зависимости

@@ -2,11 +2,19 @@ package com.example.courseworkthree.model;
 
 
 public enum ColorSocks {
-RED ("КРАСНЫЙ"),GREEN("ЗЕЛЕНЫЙ"),BLUE("ГОЛУБОЙ"),YELLOW("ЖЕЛТЫЙ"),BLACK("ЧЕРНЫЙ"),GRAY("СЕРЫЙ"),WHITE("БЕЛЫЙ");
+RED ("КРАСНЫЙ"),GREEN("ЗЕЛЕНЫЙ"),BLUE("СИНИЙ"),YELLOW("ЖЕЛТЫЙ"),BLACK("ЧЕРНЫЙ"),GRAY("СЕРЫЙ"),WHITE("БЕЛЫЙ");
 final String color;
 
     ColorSocks(String color) {
         this.color = color;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    @Override
+    public String toString() {
+        return getColor ();
+    }
 }
