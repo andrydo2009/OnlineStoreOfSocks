@@ -21,8 +21,11 @@ public class SocksServiceImpl implements SocksService {
 
     private static List<Socks> socksLinkedList = new LinkedList<> ();
 
-    private SocksFileService socksFileService;
+    private final SocksFileService socksFileService;
 
+    public SocksServiceImpl(SocksFileService socksFileService) {
+        this.socksFileService = socksFileService;
+    }
 
     @PostConstruct // когда метод отмечен этой аннотацией, он будет вызываться сразу после внедрения зависимости
     private void init() {
@@ -40,7 +43,7 @@ public class SocksServiceImpl implements SocksService {
 
     @Override
     public List<Socks> showSocksList() { //выводим весь список товара
-
+        //readSocksFromFile ();
         return socksLinkedList;
     }
 
@@ -94,6 +97,7 @@ public class SocksServiceImpl implements SocksService {
                 //saveSocksToFile ();
             } else if (s.getQuantity () == socks.getQuantity ()) {
                 socksLinkedList.remove ( s );
+                //saveSocksToFile
             }
             return true;
         }
