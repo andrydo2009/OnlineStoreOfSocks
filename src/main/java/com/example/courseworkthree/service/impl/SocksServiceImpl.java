@@ -26,7 +26,7 @@ public class SocksServiceImpl implements SocksService {
 
     @PostConstruct // когда метод отмечен этой аннотацией, он будет вызываться сразу после внедрения зависимости
     private void init() {
-
+    //readSocksFromFile ();
     }
 
 
@@ -40,6 +40,7 @@ public class SocksServiceImpl implements SocksService {
 
     @Override
     public List<Socks> showSocksList() { //выводим весь список товара
+
         return socksLinkedList;
     }
 
@@ -48,6 +49,7 @@ public class SocksServiceImpl implements SocksService {
         for (Socks s : socksLinkedList) {
             if (searchIdenticalSocksList ( socks , s ) && s.getQuantity () >= socks.getQuantity ()) {
                 s.setQuantity ( s.getQuantity () - socks.getQuantity () );
+                //saveSocksToFile ();
             }
         }
         return false;
@@ -58,20 +60,22 @@ public class SocksServiceImpl implements SocksService {
         for (Socks s : socksLinkedList) {
             if (searchIdenticalSocksList ( socks , s )) {
                 s.setQuantity ( s.getQuantity () + socks.getQuantity () );
+                //saveSocksToFile ();
                 return socks;
             }
         }
         return addSocks ( socks );
     }
-@Override
+
+    @Override
     public int getSocksAvailability(int min , int max , ColorSocks colorParam , SizeSocks sizeParam) {
         int count = 0;
         for (Socks s : socksLinkedList) {
-            if (searchComposition ( min , max , s.getSocksOfComposition () )&&s.getColorSocks ().equals ( colorParam )) {
-                count=count+s.getQuantity ();
+            if (searchComposition ( min , max , s.getSocksOfComposition () ) && s.getColorSocks ().equals ( colorParam )) {
+                count = count + s.getQuantity ();
             }
         }
-     return count;
+        return count;
     }
 
 
@@ -81,15 +85,17 @@ public class SocksServiceImpl implements SocksService {
                 socksList.getSocksOfComposition () == socksComparable.getSocksOfComposition () &&
                 socksList.getSizeSocks () == socksComparable.getSizeSocks ();
     }
-@Override
-    public boolean deleteDefectiveSocks(Socks socks){
+
+    @Override
+    public boolean deleteDefectiveSocks(Socks socks) {
         for (Socks s : socksLinkedList) {
-            if (searchIdenticalSocksList ( socks , s )&&socks.getQuantity ()<=s.getQuantity ()&&socks.getQuantity ()>0) {
+            if (searchIdenticalSocksList ( socks , s ) && socks.getQuantity () <= s.getQuantity () && socks.getQuantity () > 0) {
                 s.setQuantity ( s.getQuantity () - socks.getQuantity () );
+                //saveSocksToFile ();
             }
 
         }
-                return false ;
+        return false;
     }
 
     public boolean searchComposition(int min , int max , int param) {
@@ -115,8 +121,6 @@ public class SocksServiceImpl implements SocksService {
             throw new RuntimeException ( e );
         }
     }
-
-
 
 
 }
