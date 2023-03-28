@@ -26,7 +26,7 @@ public class SocksServiceImpl implements SocksService {
 
     @PostConstruct // когда метод отмечен этой аннотацией, он будет вызываться сразу после внедрения зависимости
     private void init() {
-    //readSocksFromFile ();
+        //readSocksFromFile ();
     }
 
 
@@ -89,11 +89,13 @@ public class SocksServiceImpl implements SocksService {
     @Override
     public boolean deleteDefectiveSocks(Socks socks) {
         for (Socks s : socksLinkedList) {
-            if (searchIdenticalSocksList ( socks , s ) && socks.getQuantity () <= s.getQuantity () && socks.getQuantity () > 0) {
+            if (searchIdenticalSocksList ( socks , s ) && socks.getQuantity () < s.getQuantity () && socks.getQuantity () > 0) {
                 s.setQuantity ( s.getQuantity () - socks.getQuantity () );
                 //saveSocksToFile ();
+            } else if (s.getQuantity () == socks.getQuantity ()) {
+                socksLinkedList.remove ( s );
             }
-
+            return true;
         }
         return false;
     }

@@ -64,7 +64,7 @@ public class SocksController {
         return ResponseEntity.ok ( addNewSocks );
     }
 
-    @GetMapping("/get/all")//показать весь список носков на складе
+    @GetMapping("/list") //показать весь список носков на складе
     @Operation(
             summary = "Полный ассортимент товара",
             description = "Выводим список полного ассортимента товара"
@@ -102,8 +102,8 @@ public class SocksController {
 
     @PutMapping("/put")///отпускаем носки со склада
     @Operation(
-            summary = "Удаляем товар со склада",
-            description = "Удаляем необходимое количество товара"
+            summary = "Списываем товар со склада",
+            description = "Списываем необходимое количество товара"
     )
     @ApiResponses(
             value = {
