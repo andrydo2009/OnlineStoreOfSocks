@@ -35,7 +35,7 @@ import java.nio.file.Path;
         @Override
         public String readSocksFromFile() {
             try {
-                return Files.readString ( Path.of ( socksFileName ,socksFilePath  ) ); // метод читает файл, в скобках укзано имя и путь
+                return Files.readString ( Path.of ( socksFileName ,socksFilePath  ) ); // метод читает файл, в скобках указано имя и путь
             } catch (IOException e) {
                 throw new RuntimeException ( e );
             }

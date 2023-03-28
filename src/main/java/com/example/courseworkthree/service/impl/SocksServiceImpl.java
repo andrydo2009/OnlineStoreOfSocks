@@ -36,14 +36,14 @@ public class SocksServiceImpl implements SocksService {
     @Override
     public Socks addSocks(Socks socks) {
         socksLinkedList.add ( socks );
-        //saveSocksToFile ();
+        //saveSocksFile ();
         return socks;
     }
 
 
     @Override
     public List<Socks> showSocksList() { //выводим весь список товара
-        //readSocksFromFile ();
+        //readSocksFile ();
         return socksLinkedList;
     }
 
@@ -109,7 +109,7 @@ public class SocksServiceImpl implements SocksService {
     }
 
 
-    private void saveSocksToFile() {
+    private void saveSocksFile() {
         try {
             String json = new ObjectMapper ().writeValueAsString ( socksLinkedList );
             socksFileService.saveSocksToFile ( json );
@@ -118,7 +118,7 @@ public class SocksServiceImpl implements SocksService {
         }
     }
 
-    private void readSocksFromFile() {
+    private void readSocksFile() {
         try {
             String json = socksFileService.readSocksFromFile ();
             socksLinkedList = new ObjectMapper ().readValue ( json , new TypeReference<LinkedList<Socks>> () {
