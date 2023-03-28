@@ -8,12 +8,4 @@ public enum SizeSocks {
         this.size = size;
     }
 
-    public Integer getSize() {
-        return size;
-    }
-
-    @Override
-    public String toString() {
-        return "Размер " + getSize ();
-    }
 }

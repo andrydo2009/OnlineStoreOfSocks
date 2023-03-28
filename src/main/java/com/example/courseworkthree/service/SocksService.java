@@ -4,7 +4,7 @@ import com.example.courseworkthree.model.ColorSocks;
 import com.example.courseworkthree.model.SizeSocks;
 import com.example.courseworkthree.model.Socks;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public interface SocksService {
 
@@ -15,10 +15,12 @@ public interface SocksService {
 
     Socks addSocks(Socks socks);
 
-    LinkedList<Socks> showSocksList();
+    List<Socks> showSocksList();
 
 
     int getSocksAvailability(int min , int max , ColorSocks colorParam , SizeSocks sizeParam);
 
     boolean searchIdenticalSocksList(Socks socksComparable , Socks socksList);
+
+    boolean deleteDefectiveSocks(Socks socks);
 }

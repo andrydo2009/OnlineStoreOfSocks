@@ -4,33 +4,42 @@ package com.example.courseworkthree.service.impl;
 import com.example.courseworkthree.model.ColorSocks;
 import com.example.courseworkthree.model.SizeSocks;
 import com.example.courseworkthree.model.Socks;
+import com.example.courseworkthree.service.SocksFileService;
 import com.example.courseworkthree.service.SocksService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.LinkedList;
+import java.util.List;
 
 
 @Service
 public class SocksServiceImpl implements SocksService {
 
-    private static  LinkedList<Socks> socksLinkedList = new LinkedList<> ();
+    private static List<Socks> socksLinkedList = new LinkedList<> ();
+
+    private SocksFileService socksFileService;
 
 
     @PostConstruct // когда метод отмечен этой аннотацией, он будет вызываться сразу после внедрения зависимости
     private void init() {
+
     }
 
 
     @Override
     public Socks addSocks(Socks socks) {
         socksLinkedList.add ( socks );
+        //saveSocksToFile ();
         return socks;
     }
 
 
     @Override
-    public LinkedList<Socks> showSocksList() { //выводим весь список товара
+    public List<Socks> showSocksList() { //выводим весь список товара
         return socksLinkedList;
     }
 
@@ -39,7 +48,6 @@ public class SocksServiceImpl implements SocksService {
         for (Socks s : socksLinkedList) {
             if (searchIdenticalSocksList ( socks , s ) && s.getQuantity () >= socks.getQuantity ()) {
                 s.setQuantity ( s.getQuantity () - socks.getQuantity () );
-                return true;
             }
         }
         return false;
@@ -73,10 +81,42 @@ public class SocksServiceImpl implements SocksService {
                 socksList.getSocksOfComposition () == socksComparable.getSocksOfComposition () &&
                 socksList.getSizeSocks () == socksComparable.getSizeSocks ();
     }
+@Override
+    public boolean deleteDefectiveSocks(Socks socks){
+        for (Socks s : socksLinkedList) {
+            if (searchIdenticalSocksList ( socks , s )&&socks.getQuantity ()<=s.getQuantity ()&&socks.getQuantity ()>0) {
+                s.setQuantity ( s.getQuantity () - socks.getQuantity () );
+            }
+
+        }
+                return false ;
+    }
 
     public boolean searchComposition(int min , int max , int param) {
         return min < param && param < max;
     }
+
+
+    private void saveSocksToFile() {
+        try {
+            String json = new ObjectMapper ().writeValueAsString ( socksLinkedList );
+            socksFileService.saveSocksToFile ( json );
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException ( e );
+        }
+    }
+
+    private void readSocksFromFile() {
+        try {
+            String json = socksFileService.readSocksFromFile ();
+            socksLinkedList = new ObjectMapper ().readValue ( json , new TypeReference<LinkedList<Socks>> () {
+            } );
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException ( e );
+        }
+    }
+
+
 
 
 }
