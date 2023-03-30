@@ -12,6 +12,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -128,5 +131,24 @@ public class SocksServiceImpl implements SocksService {
         }
     }
 
+//    private void saveTest(){
+//        FileWriter fw = null;
+//        File file=new File("C:/Users/Андрей/IdeaProjects/CourseWorkThree/src/main/resources/socks.json");
+//        try {
+//            fw = new FileWriter(file, true);
+//            fw.write( String.valueOf ( socksLinkedList ) );
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                assert fw != null;
+//                fw.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+    }
 
-}
+
