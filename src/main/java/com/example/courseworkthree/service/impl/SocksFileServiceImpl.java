@@ -21,18 +21,6 @@ import java.nio.file.Path;
 
 
         @Override
-        public boolean saveSocksToFile(String json) {
-            try {
-                cleanSocksDataFile ();//подготавливаем файл
-                Files.writeString ( Path.of ( socksFileName ,socksFilePath  ) , json ); // записывает файл в строку
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace ();
-                return false;
-            }
-        }
-
-        @Override
         public String readSocksFromFile() {
             try {
                 return Files.readString ( Path.of ( socksFileName ,socksFilePath  ) ); // метод читает файл, в скобках указано имя и путь

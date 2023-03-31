@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping()
+@RequestMapping("/api/socks")
 @Tag(name = " Носки ", description = " Операции с носками ")
 public class SocksController {
 
@@ -30,7 +30,7 @@ public class SocksController {
     }
 
 
-    @PostMapping("/api/socks")//добавить носки на склад
+    @PostMapping()//добавить носки на склад
     @Operation(
             summary = "Заносим товар на склад",
             description = "Пополняем ассортимент нашего склада"
@@ -64,7 +64,7 @@ public class SocksController {
         return ResponseEntity.ok ( addNewSocks );
     }
 
-    @GetMapping ("/api/socks/all")//показать весь список носков на складе
+    @GetMapping ("/all")//показать весь список носков на складе
     @Operation(
             summary = "Полный ассортимент товара",
             description = "Выводим список полного ассортимента товара"
@@ -100,7 +100,7 @@ public class SocksController {
         } else return new ResponseEntity<> ( "Список не содержит товара" , HttpStatus.BAD_REQUEST );
     }
 
-    @PutMapping("/api/socks")///отпускаем носки со склада
+    @PutMapping()///отпускаем носки со склада
     @Operation(
             summary = "Списываем товар со склада",
             description = "Списываем необходимое количество товара"
@@ -136,7 +136,7 @@ public class SocksController {
             return new ResponseEntity<> ( "Товара нет на складе в нужном количестве или параметры запроса имеют некорректный формат" , HttpStatus.BAD_REQUEST );
     }
 
-    @GetMapping("/api/socks")
+    @GetMapping()
     @Operation(
             summary = "Проверяем наличие товара",
             description = "Заполните параметры для поиска товара на складе"
@@ -175,7 +175,7 @@ public class SocksController {
             return ResponseEntity.ok ( availability );
         } else return ResponseEntity.status ( HttpStatus.NOT_FOUND ).build ();
     }
-@DeleteMapping("/api/socks")
+@DeleteMapping()
 @Operation(
         summary = "Удаляем бракованный товар со склада",
         description = "Удаляем необходимое  количество бракованного товара"

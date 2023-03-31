@@ -5,7 +5,6 @@ import java.nio.file.Path;
 
 public interface SocksFileService {
 
-    boolean saveSocksToFile(String json);
 
     String readSocksFromFile();
 

@@ -6,15 +6,14 @@ import com.example.courseworkthree.model.SizeSocks;
 import com.example.courseworkthree.model.Socks;
 import com.example.courseworkthree.service.SocksFileService;
 import com.example.courseworkthree.service.SocksService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Service;
 
+
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,27 +25,28 @@ public class SocksServiceImpl implements SocksService {
 
     private final SocksFileService socksFileService;
 
+
     public SocksServiceImpl(SocksFileService socksFileService) {
         this.socksFileService = socksFileService;
+
     }
 
     @PostConstruct // когда метод отмечен этой аннотацией, он будет вызываться сразу после внедрения зависимости
     private void init() {
-        //readSocksFromFile ();
     }
 
 
     @Override
     public Socks addSocks(Socks socks) {
         socksLinkedList.add ( socks );
-        //saveSocksFile ();
+        saveTest ();
         return socks;
     }
 
 
     @Override
     public List<Socks> showSocksList() { //выводим весь список товара
-        //readSocksFile ();
+        socksLinkedList = readSocksFile ();
         return socksLinkedList;
     }
 
@@ -55,7 +55,7 @@ public class SocksServiceImpl implements SocksService {
         for (Socks s : socksLinkedList) {
             if (searchIdenticalSocksList ( socks , s ) && s.getQuantity () >= socks.getQuantity ()) {
                 s.setQuantity ( s.getQuantity () - socks.getQuantity () );
-                //saveSocksToFile ();
+                saveTest ();
             }
         }
         return false;
@@ -66,7 +66,7 @@ public class SocksServiceImpl implements SocksService {
         for (Socks s : socksLinkedList) {
             if (searchIdenticalSocksList ( socks , s )) {
                 s.setQuantity ( s.getQuantity () + socks.getQuantity () );
-                //saveSocksToFile ();
+                saveTest ();
                 return socks;
             }
         }
@@ -97,10 +97,10 @@ public class SocksServiceImpl implements SocksService {
         for (Socks s : socksLinkedList) {
             if (searchIdenticalSocksList ( socks , s ) && socks.getQuantity () < s.getQuantity () && socks.getQuantity () > 0) {
                 s.setQuantity ( s.getQuantity () - socks.getQuantity () );
-                //saveSocksToFile ();
+                saveTest ();
             } else if (s.getQuantity () == socks.getQuantity ()) {
                 socksLinkedList.remove ( s );
-                //saveSocksToFile
+                saveTest ();
             }
             return true;
         }
@@ -111,44 +111,28 @@ public class SocksServiceImpl implements SocksService {
         return min < param && param < max;
     }
 
+    private List<Socks> readSocksFile() {
+        List<Socks> socksList = new LinkedList<> ();
+        try (FileReader reader = new FileReader ( "src/main/resources/socks.json" )) {
+            Gson gson = new Gson ();
+            Socks[] socks = gson.fromJson ( reader , Socks[].class );
+            socksList.addAll ( Arrays.asList ( socks ) );
+        }catch (Exception e){
+            e.printStackTrace ();
+        }
+       return socksList;
+    }
 
-    private void saveSocksFile() {
-        try {
-            String json = new ObjectMapper ().writeValueAsString ( socksLinkedList );
-            socksFileService.saveSocksToFile ( json );
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException ( e );
+    private void saveTest() {
+        socksFileService.cleanSocksDataFile ();
+        Gson gson = new GsonBuilder ().setPrettyPrinting ().create ();
+        String json = gson.toJson ( socksLinkedList );
+        try (FileWriter writer = new FileWriter ( "src/main/resources/socks.json" )) {
+            writer.write ( json );
+        } catch (IOException e) {
+            e.printStackTrace ();
         }
     }
-
-    private void readSocksFile() {
-        try {
-            String json = socksFileService.readSocksFromFile ();
-            socksLinkedList = new ObjectMapper ().readValue ( json , new TypeReference<LinkedList<Socks>> () {
-            } );
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException ( e );
-        }
-    }
-
-//    private void saveTest(){
-//        FileWriter fw = null;
-//        File file=new File("C:/Users/Андрей/IdeaProjects/CourseWorkThree/src/main/resources/socks.json");
-//        try {
-//            fw = new FileWriter(file, true);
-//            fw.write( String.valueOf ( socksLinkedList ) );
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                assert fw != null;
-//                fw.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-    }
+}
 
 

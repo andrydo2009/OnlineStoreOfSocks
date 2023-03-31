@@ -1,12 +1,22 @@
 package com.example.courseworkthree.model;
 
 
-public enum ColorSocks {
-RED ("КРАСНЫЙ"),GREEN("ЗЕЛЕНЫЙ"),BLUE("СИНИЙ"),YELLOW("ЖЕЛТЫЙ"),BLACK("ЧЕРНЫЙ"),GRAY("СЕРЫЙ"),WHITE("БЕЛЫЙ");
-final String color;
+import com.google.gson.annotations.SerializedName;
 
-    ColorSocks(String color) {
-        this.color = color;
-    }
+public enum ColorSocks {
+    @SerializedName("КРАСНЫЙ")
+    RED,
+    @SerializedName("ЗЕЛЕНЫЙ")
+    GREEN,
+    @SerializedName("СИНИЙ")
+    BLUE,
+    @SerializedName("ЖЕЛТЫЙ")
+    YELLOW,
+    @SerializedName("ЧЕРНЫЙ")
+    BLACK,
+    @SerializedName("СЕРЫЙ")
+    GRAY,
+    @SerializedName("БЕЛЫЙ")
+    WHITE
 
 }
