@@ -1,4 +1,4 @@
-package com.example.courseworkthree.model;
+package com.example.courseworkthree.model.socks;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

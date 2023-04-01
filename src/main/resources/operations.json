@@ -1,0 +1,6 @@
+{
+  "Socks(colorSocks=RED, sizeSocks=S25, socksOfComposition=0, quantity=100)": {
+    "typeOperation": "ACCEPTANCE_SOCKS",
+    "dateOperation": "2023-04-01T04:08:27.259285600"
+  }
+}

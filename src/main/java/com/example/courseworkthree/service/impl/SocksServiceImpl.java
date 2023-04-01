@@ -1,11 +1,15 @@
 package com.example.courseworkthree.service.impl;
 
 
-import com.example.courseworkthree.model.ColorSocks;
-import com.example.courseworkthree.model.SizeSocks;
-import com.example.courseworkthree.model.Socks;
+import com.example.courseworkthree.model.operations.OperationsWithSocks;
+import com.example.courseworkthree.model.operations.TypeOperationWithSocks;
+import com.example.courseworkthree.model.socks.ColorSocks;
+import com.example.courseworkthree.model.socks.SizeSocks;
+import com.example.courseworkthree.model.socks.Socks;
 import com.example.courseworkthree.service.SocksFileService;
 import com.example.courseworkthree.service.SocksService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Service;
@@ -13,15 +17,18 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 
 @Service
 public class SocksServiceImpl implements SocksService {
 
     private static List<Socks> socksLinkedList = new LinkedList<> ();
+
+    private static Map<Socks, OperationsWithSocks> operationsWithSocksSocksMap = new HashMap<> ();
 
     private final SocksFileService socksFileService;
 
@@ -39,7 +46,9 @@ public class SocksServiceImpl implements SocksService {
     @Override
     public Socks addSocks(Socks socks) {
         socksLinkedList.add ( socks );
-        saveTest ();
+        operationsWithSocksSocksMap.put ( socks , createInOperation () );
+        saveSocksFile ();
+        saveOperationFile ();
         return socks;
     }
 
@@ -50,12 +59,20 @@ public class SocksServiceImpl implements SocksService {
         return socksLinkedList;
     }
 
+
+    @Override
+    public Map<Socks,OperationsWithSocks> showOperationsMap(){
+        return operationsWithSocksSocksMap;
+    }
+
     @Override
     public boolean editSocksList(Socks socks) { // удаляем необходимое количество носков со склада
         for (Socks s : socksLinkedList) {
-            if (searchIdenticalSocksList ( socks , s ) && s.getQuantity () >= socks.getQuantity ()) {
+            if (searchIdenticalSocksList ( socks , s ) && s.getQuantity () >= socks.getQuantity () && operationsWithSocksSocksMap.containsKey ( socks )) {
                 s.setQuantity ( s.getQuantity () - socks.getQuantity () );
-                saveTest ();
+                operationsWithSocksSocksMap.put ( socks,createExOperation () );
+                saveSocksFile ();
+                saveOperationFile ();
             }
         }
         return false;
@@ -64,9 +81,11 @@ public class SocksServiceImpl implements SocksService {
     @Override
     public Socks addSocksToList(Socks socks) {// пополняем наш склад носков
         for (Socks s : socksLinkedList) {
-            if (searchIdenticalSocksList ( socks , s )) {
+            if (searchIdenticalSocksList ( socks , s )&&operationsWithSocksSocksMap.containsKey ( socks )) {
                 s.setQuantity ( s.getQuantity () + socks.getQuantity () );
-                saveTest ();
+                operationsWithSocksSocksMap.put ( socks,createInOperation () );
+                saveSocksFile ();
+                saveOperationFile ();
                 return socks;
             }
         }
@@ -95,12 +114,16 @@ public class SocksServiceImpl implements SocksService {
     @Override
     public boolean deleteDefectiveSocks(Socks socks) {
         for (Socks s : socksLinkedList) {
-            if (searchIdenticalSocksList ( socks , s ) && socks.getQuantity () < s.getQuantity () && socks.getQuantity () > 0) {
+            if (searchIdenticalSocksList ( socks , s ) && socks.getQuantity () < s.getQuantity () && socks.getQuantity () > 0&&operationsWithSocksSocksMap.containsKey ( socks )) {
                 s.setQuantity ( s.getQuantity () - socks.getQuantity () );
-                saveTest ();
-            } else if (s.getQuantity () == socks.getQuantity ()) {
+                operationsWithSocksSocksMap.put ( socks,createExOperation () );
+                saveSocksFile ();
+                saveOperationFile ();
+            } else if (s.getQuantity () == socks.getQuantity ()&&operationsWithSocksSocksMap.containsKey ( socks )) {
+                operationsWithSocksSocksMap.put ( socks ,createExOperation ());
                 socksLinkedList.remove ( s );
-                saveTest ();
+                saveSocksFile ();
+                saveOperationFile ();
             }
             return true;
         }
@@ -117,13 +140,13 @@ public class SocksServiceImpl implements SocksService {
             Gson gson = new Gson ();
             Socks[] socks = gson.fromJson ( reader , Socks[].class );
             socksList.addAll ( Arrays.asList ( socks ) );
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace ();
         }
-       return socksList;
+        return socksList;
     }
 
-    private void saveTest() {
+    private void saveSocksFile() {
         socksFileService.cleanSocksDataFile ();
         Gson gson = new GsonBuilder ().setPrettyPrinting ().create ();
         String json = gson.toJson ( socksLinkedList );
@@ -133,6 +156,27 @@ public class SocksServiceImpl implements SocksService {
             e.printStackTrace ();
         }
     }
+
+    private OperationsWithSocks createExOperation() {
+        String date= String.valueOf ( LocalDateTime.now () );
+        return new OperationsWithSocks ( TypeOperationWithSocks.EXTRADITION_SOCKS,date);
+    }
+
+    private OperationsWithSocks createInOperation() {
+        String date= String.valueOf ( LocalDateTime.now () );
+        return new OperationsWithSocks ( TypeOperationWithSocks.ACCEPTANCE_SOCKS,date);
+    }
+
+    private void saveOperationFile() {
+        try {
+            String json = new ObjectMapper ().writeValueAsString ( operationsWithSocksSocksMap);
+            socksFileService.saveOperationsToFile ( json );
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException ( e );
+        }
+    }
+
+
 }
 
 

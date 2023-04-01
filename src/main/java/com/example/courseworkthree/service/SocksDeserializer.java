@@ -1,8 +1,8 @@
 package com.example.courseworkthree.service;
 
-import com.example.courseworkthree.model.ColorSocks;
-import com.example.courseworkthree.model.SizeSocks;
-import com.example.courseworkthree.model.Socks;
+import com.example.courseworkthree.model.socks.ColorSocks;
+import com.example.courseworkthree.model.socks.SizeSocks;
+import com.example.courseworkthree.model.socks.Socks;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;

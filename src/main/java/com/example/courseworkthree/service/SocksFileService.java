@@ -6,6 +6,8 @@ import java.nio.file.Path;
 public interface SocksFileService {
 
 
+    boolean saveOperationsToFile(String json);
+
     String readSocksFromFile();
 
     boolean cleanSocksDataFile();
@@ -13,4 +15,8 @@ public interface SocksFileService {
     File getDataSocksFile();
 
     Path createTempFile(String suffix);
+
+    boolean cleanOperationDataFile();
+
+    File geOperationDataSocksFile();
 }

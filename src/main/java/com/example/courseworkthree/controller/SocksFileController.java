@@ -1,6 +1,7 @@
 package com.example.courseworkthree.controller;
 
-import com.example.courseworkthree.model.Socks;
+
+import com.example.courseworkthree.model.socks.Socks;
 import com.example.courseworkthree.service.SocksFileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 
+
 @RestController
 @RequestMapping("/file/socks")
 @Tag(name = " Работа с файлами ", description = " Операции с файлами носки ")
@@ -27,14 +29,16 @@ public class SocksFileController {
 
     private  final SocksFileService socksFileService;
 
+
     public SocksFileController(SocksFileService socksFileService) {
         this.socksFileService = socksFileService;
+
     }
 
-    @GetMapping("/export")
+    @GetMapping("/export")//экспорт данных в текущем состоянии
     @Operation(
             summary = "Скачивание файла",
-            description = "Скачиваем  список всех носков в JSON формате"
+            description = "Скачиваем из приложения список всех носков в JSON формате"
     )
     @ApiResponses(
             value = {
@@ -77,10 +81,10 @@ public class SocksFileController {
         }
     }
 
-    @PostMapping(value = "/import",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/import",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)//импорт данных
     @Operation(
             summary = "Загрузка файла",
-            description = "Загружаем список всех носков в JSON формате"
+            description = "Загружаем в приложение список всех носков в JSON формате"
     )
     @ApiResponses(
             value = {
@@ -107,8 +111,8 @@ public class SocksFileController {
             }
     )
     public ResponseEntity<Void> uploadSocksFile(@RequestParam MultipartFile file) {
-        socksFileService.cleanSocksDataFile ();
-        File uploadFile = socksFileService.getDataSocksFile ();
+        socksFileService.cleanOperationDataFile ();
+        File uploadFile = socksFileService.geOperationDataSocksFile ();
         try (FileOutputStream fos = new FileOutputStream(uploadFile)) {
             IOUtils.copy(file.getInputStream(), fos);
             return ResponseEntity.ok().build();
@@ -117,5 +121,7 @@ public class SocksFileController {
         }
         return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
+
     
 }
