@@ -111,8 +111,8 @@ public class SocksFileController {
             }
     )
     public ResponseEntity<Void> uploadSocksFile(@RequestParam MultipartFile file) {
-        socksFileService.cleanOperationDataFile ();
-        File uploadFile = socksFileService.getOperationDataSocksFile ();
+        socksFileService.cleanSocksDataFile ();
+        File uploadFile = socksFileService.getDataSocksFile ();
         try (FileOutputStream fos = new FileOutputStream ( uploadFile )) {
             IOUtils.copy ( file.getInputStream () , fos );
             return ResponseEntity.ok ().build ();

@@ -17,7 +17,7 @@ public interface SocksService {
 
     Socks addSocksToList(Socks socks);
 
-   // Socks addSocks(Socks socks);
+    Socks addSocks(Socks socks);
 
     List<Socks> showSocksList();
 

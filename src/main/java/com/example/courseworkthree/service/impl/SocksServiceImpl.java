@@ -22,10 +22,10 @@ import java.util.*;
 @Service
 public class SocksServiceImpl implements SocksService {
 
-    private static List<Socks> socksLinkedList = new LinkedList<> ();
+    private  static final List<Socks> socksLinkedList = new LinkedList<> ();
 
 
-    private static   Map<OperationsWithSocks, Socks> operationsWithSocksSocksMap = new HashMap<> ();
+    private  static Map<OperationsWithSocks, Socks> operationsWithSocksSocksMap = new HashMap<> ();
 
     private final SocksFileService socksFileService;
 
@@ -40,37 +40,33 @@ public class SocksServiceImpl implements SocksService {
     }
 
 
-//    @Override
-//    public Socks addSocks(Socks socks) {
-//        socksLinkedList.add ( socks );
-//        saveSocksFile ();
-//        saveOperationFile ();
-//        return socks;
-//    }
-
     @Override
-    public Socks addSocksToList(Socks socks) {// пополняем наш склад носков
-        operationsWithSocksSocksMap.put ( createInOperation () , socks );
-        for (Socks s : socksLinkedList) {
-            if (searchIdenticalSocksList ( socks , s )) {
-                socks.setQuantity ( s.getQuantity () + socks.getQuantity () );
-                socksLinkedList.remove ( s );
-                socksLinkedList.add ( socks );
-                saveSocksFile ();
-                saveOperationFile ();
-                return socks;
-            }
-
-        }
-        socksLinkedList.add ( socks );
+    public Socks addSocks(Socks socks) {
+        operationsWithSocksSocksMap.put ( createInOperation () , new Socks (socks.getColorSocks (),socks.getSizeSocks (),socks.getSocksOfComposition (),socks.getQuantity ()));
+        socksLinkedList.add ( socks);
         saveSocksFile ();
         saveOperationFile ();
         return socks;
     }
 
     @Override
+    public Socks addSocksToList(Socks socks) {// пополняем наш склад носков
+        operationsWithSocksSocksMap.put ( createInOperation () , new Socks (socks.getColorSocks (),socks.getSizeSocks (),socks.getSocksOfComposition (),socks.getQuantity ()));
+        for (Socks s : socksLinkedList) {
+            if (searchIdenticalSocksList ( socks , s )) {
+                s.setQuantity ( s.getQuantity () + socks.getQuantity () );
+                saveSocksFile ();
+                saveOperationFile ();
+            return socks;
+            }
+        }
+        return addSocks ( socks );
+
+    }
+
+    @Override
     public List<Socks> showSocksList() { //выводим весь список товара
-        socksLinkedList = readSocksFile ();
+        readSocksFile ();
         return socksLinkedList;
     }
 
@@ -87,11 +83,12 @@ public class SocksServiceImpl implements SocksService {
 
     @Override
     public boolean editSocksList(Socks socks) { // удаляем необходимое количество носков со склада
+                operationsWithSocksSocksMap.put ( createExOperation () , new Socks (socks.getColorSocks (),socks.getSizeSocks (),socks.getSocksOfComposition (),socks.getQuantity ()));
         for (Socks s : socksLinkedList) {
             if (searchIdenticalSocksList ( socks , s ) && s.getQuantity () >= socks.getQuantity ()) {
                 s.setQuantity ( s.getQuantity () - socks.getQuantity () );
-                operationsWithSocksSocksMap.put ( createExOperation () , socks );
                 saveSocksFile ();
+                saveOperationFile ();
             }
         }
         return false;
@@ -119,16 +116,17 @@ public class SocksServiceImpl implements SocksService {
 
     @Override
     public boolean deleteDefectiveSocks(Socks socks) {
+                operationsWithSocksSocksMap.put ( createExOperation () ,new Socks (socks.getColorSocks (),socks.getSizeSocks (),socks.getSocksOfComposition (),socks.getQuantity ()));
         for (Socks s : socksLinkedList) {
             if (searchIdenticalSocksList ( socks , s ) && socks.getQuantity () < s.getQuantity () && socks.getQuantity () > 0) {
-                operationsWithSocksSocksMap.put ( createExOperation () ,socks );
                 s.setQuantity ( s.getQuantity () - socks.getQuantity () );
+                saveOperationFile ();
                 saveSocksFile ();
             } else if (s.getQuantity () == socks.getQuantity ()) {
                 socksLinkedList.remove ( s );
                 saveSocksFile ();
+                saveOperationFile ();
             }
-            saveOperationFile ();
             return true;
         }
         return false;
@@ -172,8 +170,8 @@ public class SocksServiceImpl implements SocksService {
     }
 
 
-    private   void saveOperationFile() {
-//        socksFileService.cleanOperationDataFile ();
+    private  void saveOperationFile() {
+       socksFileService.cleanOperationDataFile ();
         Gson gson = new GsonBuilder ()
                 .registerTypeAdapter ( Map.class , new com.example.courseworkthree.service.MapSerializer () )
                 .setPrettyPrinting ()

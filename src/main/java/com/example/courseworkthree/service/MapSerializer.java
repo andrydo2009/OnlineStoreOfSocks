@@ -8,17 +8,28 @@ import com.google.gson.*;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-public class MapSerializer implements JsonSerializer<Map<OperationsWithSocks,Socks>> {
+public class MapSerializer implements JsonSerializer<Map<OperationsWithSocks, Socks>> {
     @Override
-    public JsonElement serialize(Map<OperationsWithSocks,Socks> map, Type typeOfSrc,
+    public JsonElement serialize(Map<OperationsWithSocks, Socks> map , Type typeOfSrc ,
                                  JsonSerializationContext context) {
-        JsonObject jsonObject=new JsonObject ();
-        JsonArray array=new JsonArray ();
-        String head="Отчет об операциях";
-        Gson gson = new GsonBuilder ().setDateFormat("yyyy-MM-dd").create();
+        JsonObject jsonObject = new JsonObject ();
+
+        String head = "Отчет об операциях";
+        Gson gson = new GsonBuilder ().setDateFormat ( "yyyy-MM-dd" ).create ();
+        JsonArray array = new JsonArray ();
+
+//        map.forEach ( ((operationsWithSocks , socks) -> {
+//            array.add ( gson.toJsonTree ( operationsWithSocks ) );
+//            array.add ( gson.toJsonTree ( socks ) );
+//            jsonObject.add ( head , array );
+//        }) );
         for (Map.Entry<OperationsWithSocks,Socks> entry : map.entrySet()) {
-            array.add ( gson.toJsonTree(entry.getKey()));
-            array.add ( gson.toJsonTree(entry.getValue ()));
+            array.add ( gson.toJsonTree ( "-------" ) );
+            array.add ( gson.toJsonTree ( "Информация об операции :" ) );
+            array.add ( gson.toJsonTree (entry.getKey()));
+            array.add ( gson.toJsonTree ( "Информация о товаре :" ) );
+            array.add ( gson.toJsonTree (entry.getValue ()));
+            array.add ( gson.toJsonTree ( "-------" ) );
             jsonObject.add ( head,array );
         }
         return jsonObject;
