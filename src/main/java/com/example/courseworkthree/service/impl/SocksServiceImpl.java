@@ -83,13 +83,18 @@ public class SocksServiceImpl implements SocksService {
 
     @Override
     public boolean editSocksList(Socks socks) { // удаляем необходимое количество носков со склада
-                operationsWithSocksSocksMap.put ( createExOperation () , new Socks (socks.getColorSocks (),socks.getSizeSocks (),socks.getSocksOfComposition (),socks.getQuantity ()));
+        operationsWithSocksSocksMap.put ( createExOperation () , new Socks (socks.getColorSocks (),socks.getSizeSocks (),socks.getSocksOfComposition (),socks.getQuantity ()));
         for (Socks s : socksLinkedList) {
-            if (searchIdenticalSocksList ( socks , s ) && s.getQuantity () >= socks.getQuantity ()) {
+            if (searchIdenticalSocksList ( socks , s ) && socks.getQuantity () < s.getQuantity () && socks.getQuantity () > 0) {
                 s.setQuantity ( s.getQuantity () - socks.getQuantity () );
+                saveOperationFile ();
+                saveSocksFile ();
+            } else if (s.getQuantity () == socks.getQuantity ()) {
+                socksLinkedList.remove ( s );
                 saveSocksFile ();
                 saveOperationFile ();
             }
+            return true;
         }
         return false;
     }
@@ -116,7 +121,7 @@ public class SocksServiceImpl implements SocksService {
 
     @Override
     public boolean deleteDefectiveSocks(Socks socks) {
-                operationsWithSocksSocksMap.put ( createExOperation () ,new Socks (socks.getColorSocks (),socks.getSizeSocks (),socks.getSocksOfComposition (),socks.getQuantity ()));
+        operationsWithSocksSocksMap.put ( createExOperation () ,new Socks (socks.getColorSocks (),socks.getSizeSocks (),socks.getSocksOfComposition (),socks.getQuantity ()));
         for (Socks s : socksLinkedList) {
             if (searchIdenticalSocksList ( socks , s ) && socks.getQuantity () < s.getQuantity () && socks.getQuantity () > 0) {
                 s.setQuantity ( s.getQuantity () - socks.getQuantity () );
