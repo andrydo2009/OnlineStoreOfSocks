@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +67,7 @@ public class SocksController {
         return ResponseEntity.ok ( addNewSocks );
     }
 
-    @GetMapping("/all")//показать весь список носков на складе
+    @GetMapping("/info")//показать весь список носков на складе
     @Operation(
             summary = "Полный ассортимент товара",
             description = "Выводим список полного ассортимента товара"
@@ -237,10 +238,11 @@ public class SocksController {
             }
     )
     public ResponseEntity<Object> showOperationStore() {
-        Map<Socks, OperationsWithSocks> socksOperationsWithSocksMap = socksService.showOperationsMap ();
+        Map<OperationsWithSocks,Socks> socksOperationsWithSocksMap = socksService.showOperationsMap ();
         if (socksOperationsWithSocksMap.size () != 0) {
             return ResponseEntity.ok ( socksOperationsWithSocksMap );
         } else return new ResponseEntity<> ( "Операций с товаром не проводилось" , HttpStatus.BAD_REQUEST );
     }
 
 }
+

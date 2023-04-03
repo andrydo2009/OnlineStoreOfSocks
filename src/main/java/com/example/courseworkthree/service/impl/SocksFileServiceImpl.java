@@ -25,26 +25,6 @@ public class SocksFileServiceImpl implements SocksFileService {
     @Value("${name.of.operations.file}")
     private String socksOperationFileName;
 
-    @Override
-    public boolean saveOperationsToFile(String json) {
-        try {
-            cleanOperationDataFile ();
-            Files.writeString ( Path.of ( socksOperationFilePath , socksOperationFileName ) , json ); // записывает файл в строку
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace ();
-            return false;
-        }
-    }
-
-    @Override
-    public String readSocksFromFile() {
-        try {
-            return Files.readString ( Path.of ( socksFileName , socksFilePath ) ); // метод читает файл, в скобках указано имя и путь
-        } catch (IOException e) {
-            throw new RuntimeException ( e );
-        }
-    }
 
     @Override
     public boolean cleanSocksDataFile() { //метод удаляет/обновляет файл
@@ -56,21 +36,6 @@ public class SocksFileServiceImpl implements SocksFileService {
         } catch (IOException e) {
             e.printStackTrace ();
             return false;
-        }
-    }
-
-    @Override
-    public File getDataSocksFile() {
-        return new File ( socksFilePath + "/" + socksFileName );
-    }
-
-
-    @Override
-    public Path createTempFile(String suffix) {
-        try {
-            return Files.createTempFile ( Path.of ( socksFilePath ) , "tempFile" , suffix ); //генерируем временный файл
-        } catch (IOException e) {
-            throw new RuntimeException ( e );
         }
     }
 
@@ -88,10 +53,53 @@ public class SocksFileServiceImpl implements SocksFileService {
     }
 
     @Override
-    public File geOperationDataSocksFile() {
+    public File getDataSocksFile() {
+        return new File ( socksFilePath + "/" + socksFileName );
+    }
+
+    @Override
+    public File getOperationDataSocksFile() {
         return new File ( socksOperationFilePath + "/" + socksOperationFileName );
     }
 
 }
+    /*
+    @Override
+    public Path createTempFile(String suffix) {
+        try {
+            return Files.createTempFile ( Path.of ( socksOperationFilePath ) , "tempFile" , suffix ); //генерируем временный файл
+        } catch (IOException e) {
+            throw new RuntimeException ( e );
+        }
+    }
+    @Override
+    public boolean saveOperationsToFile(String json) {
+        try {
+            cleanOperationDataFile ();
+            Files.writeString ( Path.of ( socksOperationFilePath , socksOperationFileName ) , json ); // записывает файл в строку
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace ();
+            return false;
+        }
+    }
 
+    @Override
+    public String readOperationsFromFile() {
+        try {
+            return Files.readString ( Path.of ( socksOperationFilePath , socksOperationFileName ) ); // метод читает файл, в скобках указано имя и путь
+        } catch (IOException e) {
+            throw new RuntimeException ( e );
+        }
+    }
+
+    @Override
+    public String readSocksFromFile() {
+        try {
+            return Files.readString ( Path.of ( socksFileName , socksFilePath ) ); // метод читает файл, в скобках указано имя и путь
+        } catch (IOException e) {
+            throw new RuntimeException ( e );
+        }
+    }
+    */
 

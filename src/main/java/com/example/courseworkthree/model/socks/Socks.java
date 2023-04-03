@@ -1,16 +1,19 @@
 package com.example.courseworkthree.model.socks;
 
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+
 @Data// аннотация содержит все необходимые методы для создания объекта класса(equal,toString and ...)
 @AllArgsConstructor// аннотация создания конструктора со всеми параметрами
 @NoArgsConstructor//автоматическая генерация не параметризованного конструктора
-public class Socks {
+public class Socks  {
 
     @SerializedName ( "Цвет" )
     @JsonProperty("Цвет")
@@ -27,4 +30,5 @@ public class Socks {
     @SerializedName ( "Количество" )
     @JsonProperty("Количество")
     private int quantity; //количество носков на складе
+
 }

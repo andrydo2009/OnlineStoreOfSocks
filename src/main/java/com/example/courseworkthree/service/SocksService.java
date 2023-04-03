@@ -11,13 +11,13 @@ import java.util.Map;
 public interface SocksService {
 
 
-    Map<Socks, OperationsWithSocks> showOperationsMap();
+    Map<OperationsWithSocks, Socks> showOperationsMap();
 
     boolean editSocksList(Socks socks);
 
     Socks addSocksToList(Socks socks);
 
-    Socks addSocks(Socks socks);
+   // Socks addSocks(Socks socks);
 
     List<Socks> showSocksList();
 
@@ -27,4 +27,5 @@ public interface SocksService {
     boolean searchIdenticalSocksList(Socks socksComparable , Socks socksList);
 
     boolean deleteDefectiveSocks(Socks socks);
+
 }
