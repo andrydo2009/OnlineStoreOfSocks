@@ -1,8 +1,9 @@
 package com.example.courseworkthree.controller;
 
-import com.example.courseworkthree.model.ColorSocks;
-import com.example.courseworkthree.model.SizeSocks;
-import com.example.courseworkthree.model.Socks;
+import com.example.courseworkthree.model.operations.OperationsWithSocks;
+import com.example.courseworkthree.model.socks.ColorSocks;
+import com.example.courseworkthree.model.socks.SizeSocks;
+import com.example.courseworkthree.model.socks.Socks;
 import com.example.courseworkthree.service.SocksService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,7 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/socks")
@@ -64,7 +67,7 @@ public class SocksController {
         return ResponseEntity.ok ( addNewSocks );
     }
 
-    @GetMapping ("/all")//показать весь список носков на складе
+    @GetMapping("/info")//показать весь список носков на складе
     @Operation(
             summary = "Полный ассортимент товара",
             description = "Выводим список полного ассортимента товара"
@@ -166,42 +169,80 @@ public class SocksController {
 
             }
     )
-    public ResponseEntity<Integer> getAvailabilitySokcsToParameter(@RequestParam("Минимальное содержание хлопка")@Parameter(description = "Введите число от 0 до 100") int cottonMin ,
-                                                                   @RequestParam("Максимальное содержание хлопка")@Parameter(description = "Введите число от 0 до 100") int cottonMax ,
-                                                                   @RequestParam("Цвет носков")@Parameter(description = "Выберете цвет из списка") ColorSocks colorSocks ,
-                                                                   @RequestParam("Размер носков")@Parameter(description = "Выберете размер из списка") SizeSocks sizeSocks) {
+    public ResponseEntity<Integer> getAvailabilitySokcsToParameter(@RequestParam("Минимальное содержание хлопка") @Parameter(description = "Введите число от 0 до 100") int cottonMin ,
+                                                                   @RequestParam("Максимальное содержание хлопка") @Parameter(description = "Введите число от 0 до 100") int cottonMax ,
+                                                                   @RequestParam("Цвет носков") @Parameter(description = "Выберете цвет из списка") ColorSocks colorSocks ,
+                                                                   @RequestParam("Размер носков") @Parameter(description = "Выберете размер из списка") SizeSocks sizeSocks) {
         int availability = socksService.getSocksAvailability ( cottonMin , cottonMax , colorSocks , sizeSocks );
         if (availability > 0) {
             return ResponseEntity.ok ( availability );
         } else return ResponseEntity.status ( HttpStatus.NOT_FOUND ).build ();
     }
-@DeleteMapping()
-@Operation(
-        summary = "Удаляем бракованный товар со склада",
-        description = "Удаляем необходимое  количество бракованного товара"
-)
-@ApiResponses(
-        value = {
-                @ApiResponse(
-                        responseCode = "200",
-                        description = "Запрос выполнен, товар списан со склада"
-                ) ,
-                @ApiResponse(
-                        responseCode = "400",
-                        description = "Параметры запроса отсутствуют или имеют некорректный формат"
 
-                ) ,
-                @ApiResponse(
-                        responseCode = "500",
-                        description = "Во время выполнения запроса произошла ошибка на сервере"
-                )
-        }
-)
-public ResponseEntity<Object> deleteSocksToStore(@RequestBody Socks socks) {
-    if (socksService.deleteDefectiveSocks ( socks )) {
-        return ResponseEntity.ok ( socks );
-    } else
-        return new ResponseEntity<> ( "Параметры запроса отсутствуют или имеют некорректный формат" , HttpStatus.BAD_REQUEST );
+    @DeleteMapping()
+    @Operation(
+            summary = "Удаляем бракованный товар со склада",
+            description = "Удаляем необходимое  количество бракованного товара"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Запрос выполнен, товар списан со склада"
+                    ) ,
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Параметры запроса отсутствуют или имеют некорректный формат"
+
+                    ) ,
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Во время выполнения запроса произошла ошибка на сервере"
+                    )
+            }
+    )
+    public ResponseEntity<Object> deleteSocksToStore(@RequestBody Socks socks) {
+        if (socksService.deleteDefectiveSocks ( socks )) {
+            return ResponseEntity.ok ( socks );
+        } else
+            return new ResponseEntity<> ( "Параметры запроса отсутствуют или имеют некорректный формат" , HttpStatus.BAD_REQUEST );
+    }
+
+    @GetMapping("/operation")
+    @Operation(
+            summary = "Полный список операций с товаром",
+            description = "Выводим список операций"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Доступен список операций",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            array = @ArraySchema(schema =
+                                            @Schema(implementation = Socks.class))
+                                    )
+                            }
+                    ) ,
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Список не содержит историю операций"
+
+                    ) ,
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Во время выполнения запроса произошла ошибка на сервере"
+                    )
+            }
+    )
+    public ResponseEntity<Object> showOperationStore() {
+        Map<OperationsWithSocks,Socks> socksOperationsWithSocksMap = socksService.showOperationsMap ();
+        if (socksOperationsWithSocksMap.size () != 0) {
+            return ResponseEntity.ok ( socksOperationsWithSocksMap );
+        } else return new ResponseEntity<> ( "Операций с товаром не проводилось" , HttpStatus.BAD_REQUEST );
+    }
+
 }
 
-}
