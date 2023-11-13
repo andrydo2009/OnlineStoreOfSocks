@@ -9,29 +9,23 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-
 @Service
 public class SocksFileServiceImpl implements SocksFileService {
-
     @Value("${path.to.data.files}")
     private String socksFilePath;
-
     @Value("${name.of.socks.file}")
     private String socksFileName;
-
     @Value("${path.to.data.files}")
     private String socksOperationFilePath;
-
     @Value("${name.of.operations.file}")
     private String socksOperationFileName;
 
-
     @Override
-    public boolean cleanSocksDataFile() { //метод удаляет/обновляет файл
+    public boolean cleanSocksDataFile() {
         try {
-            Path path = Path.of ( socksFilePath , socksFileName ); // class Path предназначен для работы с файлами, в скобках имя файла затем путь
-            Files.deleteIfExists ( path );// удаляем старый файл если он есть
-            Files.createFile ( path );// создаем новый файл
+            Path path = Path.of ( socksFilePath , socksFileName );
+            Files.deleteIfExists ( path );
+            Files.createFile ( path );
             return true;
         } catch (IOException e) {
             e.printStackTrace ();
@@ -40,11 +34,11 @@ public class SocksFileServiceImpl implements SocksFileService {
     }
 
     @Override
-    public boolean cleanOperationDataFile() { //метод удаляет/обновляет файл
+    public boolean cleanOperationDataFile() {
         try {
-            Path path = Path.of ( socksOperationFilePath , socksOperationFileName ); // class Path предназначен для работы с файлами, в скобках имя файла затем путь
-            Files.deleteIfExists ( path );// удаляем старый файл если он есть
-            Files.createFile ( path );// создаем новый файл
+            Path path = Path.of ( socksOperationFilePath , socksOperationFileName );
+            Files.deleteIfExists ( path );
+            Files.createFile ( path );
             return true;
         } catch (IOException e) {
             e.printStackTrace ();
@@ -61,7 +55,4 @@ public class SocksFileServiceImpl implements SocksFileService {
     public File getOperationDataSocksFile() {
         return new File ( socksOperationFilePath + "/" + socksOperationFileName );
     }
-
 }
-
-

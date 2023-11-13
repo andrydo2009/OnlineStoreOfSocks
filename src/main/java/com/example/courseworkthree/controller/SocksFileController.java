@@ -1,6 +1,5 @@
 package com.example.courseworkthree.controller;
 
-
 import com.example.courseworkthree.model.socks.Socks;
 import com.example.courseworkthree.service.SocksFileService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,14 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 
-
 @RestController
 @RequestMapping("/file/socks")
 @Tag(name = " Работа с файлами ", description = " Операции с файлами носки ")
 public class SocksFileController {
 
     private final SocksFileService socksFileService;
-
 
     public SocksFileController(SocksFileService socksFileService) {
         this.socksFileService = socksFileService;
@@ -165,6 +162,4 @@ public class SocksFileController {
             return ResponseEntity.noContent ().build ();
         }
     }
-
-
 }

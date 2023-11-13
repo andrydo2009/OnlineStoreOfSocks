@@ -1,10 +1,7 @@
 package com.example.courseworkthree.model.socks;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
-
-
 
 public enum ColorSocks {
     @SerializedName("КРАСНЫЙ")
@@ -28,5 +25,4 @@ public enum ColorSocks {
     @SerializedName("БЕЛЫЙ")
     @JsonProperty("БЕЛЫЙ")
     WHITE;
-
 }

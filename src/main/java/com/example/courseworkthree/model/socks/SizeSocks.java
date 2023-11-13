@@ -37,5 +37,4 @@ public enum SizeSocks {
     @SerializedName("52")
     @JsonProperty("52")
     S52;
-
 }

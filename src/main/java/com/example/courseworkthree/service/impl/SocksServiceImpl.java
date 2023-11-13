@@ -1,6 +1,5 @@
 package com.example.courseworkthree.service.impl;
 
-
 import com.example.courseworkthree.model.operations.OperationsWithSocks;
 import com.example.courseworkthree.model.operations.TypeOperationWithSocks;
 import com.example.courseworkthree.model.socks.ColorSocks;
@@ -18,31 +17,24 @@ import javax.annotation.PostConstruct;
 import java.io.*;
 import java.util.*;
 
-
 @Service
 public class SocksServiceImpl implements SocksService {
-
     private  static final List<Socks> socksLinkedList = new LinkedList<> ();
-
-
     private  static Map<OperationsWithSocks, Socks> operationsWithSocksSocksMap = new HashMap<> ();
-
     private final SocksFileService socksFileService;
-
 
     public SocksServiceImpl(SocksFileService socksFileService) {
         this.socksFileService = socksFileService;
-
     }
 
-    @PostConstruct // когда метод отмечен этой аннотацией, он будет вызываться сразу после внедрения зависимости
+    @PostConstruct
     private void init() {
     }
 
-
     @Override
     public Socks addSocks(Socks socks) {
-        operationsWithSocksSocksMap.put ( createInOperation () , new Socks (socks.getColorSocks (),socks.getSizeSocks (),socks.getSocksOfComposition (),socks.getQuantity ()));
+        operationsWithSocksSocksMap.put ( createInOperation () ,
+                new Socks (socks.getColorSocks (),socks.getSizeSocks (),socks.getSocksOfComposition (),socks.getQuantity ()));
         socksLinkedList.add ( socks);
         saveSocksFile ();
         saveOperationFile ();
@@ -50,8 +42,9 @@ public class SocksServiceImpl implements SocksService {
     }
 
     @Override
-    public Socks addSocksToList(Socks socks) {// пополняем наш склад носков
-        operationsWithSocksSocksMap.put ( createInOperation () , new Socks (socks.getColorSocks (),socks.getSizeSocks (),socks.getSocksOfComposition (),socks.getQuantity ()));
+    public Socks addSocksToList(Socks socks) {
+        operationsWithSocksSocksMap.put ( createInOperation () ,
+                new Socks (socks.getColorSocks (),socks.getSizeSocks (),socks.getSocksOfComposition (),socks.getQuantity ()));
         for (Socks s : socksLinkedList) {
             if (searchIdenticalSocksList ( socks , s )) {
                 s.setQuantity ( s.getQuantity () + socks.getQuantity () );
@@ -61,15 +54,13 @@ public class SocksServiceImpl implements SocksService {
             }
         }
         return addSocks ( socks );
-
     }
 
     @Override
-    public List<Socks> showSocksList() { //выводим весь список товара
+    public List<Socks> showSocksList() {
         readSocksFile ();
         return socksLinkedList;
     }
-
 
     @Override
     public Map<OperationsWithSocks, Socks> showOperationsMap() {
@@ -82,8 +73,9 @@ public class SocksServiceImpl implements SocksService {
     }
 
     @Override
-    public boolean editSocksList(Socks socks) { // удаляем необходимое количество носков со склада
-        operationsWithSocksSocksMap.put ( createExOperation () , new Socks (socks.getColorSocks (),socks.getSizeSocks (),socks.getSocksOfComposition (),socks.getQuantity ()));
+    public boolean editSocksList(Socks socks) {
+        operationsWithSocksSocksMap.put ( createExOperation () ,
+                new Socks (socks.getColorSocks (),socks.getSizeSocks (),socks.getSocksOfComposition (),socks.getQuantity ()));
         for (Socks s : socksLinkedList) {
             if (searchIdenticalSocksList ( socks , s ) && socks.getQuantity () < s.getQuantity () && socks.getQuantity () > 0) {
                 s.setQuantity ( s.getQuantity () - socks.getQuantity () );
@@ -99,7 +91,6 @@ public class SocksServiceImpl implements SocksService {
         return false;
     }
 
-
     @Override
     public int getSocksAvailability(int min , int max , ColorSocks colorParam , SizeSocks sizeParam) {
         int count = 0;
@@ -110,7 +101,6 @@ public class SocksServiceImpl implements SocksService {
         }
         return count;
     }
-
 
     @Override
     public boolean searchIdenticalSocksList(Socks socksComparable , Socks socksList) {// ищем одинаковые носки в списке без учета их количества
@@ -174,7 +164,6 @@ public class SocksServiceImpl implements SocksService {
         return new OperationsWithSocks ( TypeOperationWithSocks.ACCEPTANCE_SOCKS , date );
     }
 
-
     private  void saveOperationFile() {
        socksFileService.cleanOperationDataFile ();
         Gson gson = new GsonBuilder ()
@@ -187,7 +176,6 @@ public class SocksServiceImpl implements SocksService {
         } catch (IOException e) {
             throw new RuntimeException ( e );
         }
-
     }
 
     private Map<OperationsWithSocks, Socks> readOperationFile() throws IOException {
@@ -202,24 +190,6 @@ public class SocksServiceImpl implements SocksService {
         }
         return operationsMap;
     }
-
-/*    @Override
-    public Path createUserOperationsReport() throws IOException {
-        Path path = socksFileService.createTempFile ( "operationsForUser" );//мы генерируем файл
-        try { Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Map.class, new com.example.courseworkthree.service.MapSerializer () )
-                .setPrettyPrinting()
-                .create();
-            String json = gson.toJson(operationsWithSocksSocksMap, Map.class);
-                Files.write ( path , Collections.singleton ( json ) );
-            } catch (IOException e) {
-                throw new RuntimeException ( e );
-            }
-
-        return path;
-    }
- */
-
 }
 
 

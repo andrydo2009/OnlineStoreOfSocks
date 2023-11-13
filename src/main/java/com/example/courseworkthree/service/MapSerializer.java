@@ -1,6 +1,5 @@
 package com.example.courseworkthree.service;
 
-
 import com.example.courseworkthree.model.operations.OperationsWithSocks;
 import com.example.courseworkthree.model.socks.Socks;
 import com.google.gson.*;
@@ -18,11 +17,6 @@ public class MapSerializer implements JsonSerializer<Map<OperationsWithSocks, So
         Gson gson = new GsonBuilder ().setDateFormat ( "yyyy-MM-dd" ).create ();
         JsonArray array = new JsonArray ();
 
-//        map.forEach ( ((operationsWithSocks , socks) -> {
-//            array.add ( gson.toJsonTree ( operationsWithSocks ) );
-//            array.add ( gson.toJsonTree ( socks ) );
-//            jsonObject.add ( head , array );
-//        }) );
         for (Map.Entry<OperationsWithSocks,Socks> entry : map.entrySet()) {
             array.add ( gson.toJsonTree ( "-------" ) );
             array.add ( gson.toJsonTree ( "Информация об операции :" ) );

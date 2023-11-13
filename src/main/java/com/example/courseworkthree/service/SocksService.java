@@ -9,23 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface SocksService {
-
-
     Map<OperationsWithSocks, Socks> showOperationsMap();
-
     boolean editSocksList(Socks socks);
-
     Socks addSocksToList(Socks socks);
-
     Socks addSocks(Socks socks);
-
     List<Socks> showSocksList();
-
-
     int getSocksAvailability(int min , int max , ColorSocks colorParam , SizeSocks sizeParam);
-
     boolean searchIdenticalSocksList(Socks socksComparable , Socks socksList);
-
     boolean deleteDefectiveSocks(Socks socks);
-
 }
