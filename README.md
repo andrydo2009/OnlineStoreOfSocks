@@ -28,6 +28,6 @@
 - В качестве UI-части приложения используется API-клиент (Swagger-ui).
 
 # Проект реализован при помощи технологий: 
-Spring framework, Maven, REST API, Swagger,Lombook,GoogleCodeGson,GoggleCodeJsonSimple.
+Spring framework, Maven, REST API, Swagger,Lombok,GoogleCodeGson,GoggleCodeJsonSimple.
 
 # Проект написан на языке Java 17
